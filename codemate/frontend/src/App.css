@@ -106,3 +106,68 @@ body {
 .logout-button:hover {
   background-color: #c93030;
 }
+
+/* profile css */
+
+.profile-wrapper {
+  background-color: #0a192f;
+  color: #f0f8ff;
+  min-height: 100vh;
+  padding-top: 60px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.profile-page {
+  max-width: 600px;
+  margin: auto;
+  padding: 24px;
+  background-color: #112240;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+.profile-heading {
+  text-align: center;
+  font-size: 1.8rem;
+  color: #64ffda;
+  margin-bottom: 24px;
+}
+
+.profile-details p {
+  margin: 12px 0;
+  font-size: 1.1rem;
+}
+
+.profile-edit {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.profile-input {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  background-color: #0a192f;
+  color: #f0f8ff;
+  font-size: 1rem;
+  border: 1px solid #64ffda;
+}
+
+.profile-save-btn, .profile-edit-btn {
+  margin-top: 12px;
+  padding: 10px;
+  font-size: 1rem;
+  border: none;
+  background-color: #64ffda;
+  color: #0a192f;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.profile-save-btn:hover, .profile-edit-btn:hover {
+  background-color: #52e0c4;
+}
+
