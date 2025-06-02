@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Navbar from './Navbar';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ const Dashboard = () => {
 
     if (token) {
       localStorage.setItem('token', token);
+      localStorage.setItem('name',username)
       setName(username);
     } else {
       navigate('/');
@@ -19,9 +21,8 @@ const Dashboard = () => {
   }, [navigate]);
 
   return (
-    <div style={{ textAlign: 'center', marginTop: '100px' }}>
-      <h2>Hello, {name}</h2>
-      <p>Welcome to your Dashboard</p>
+    <div>
+      <Navbar />
     </div>
   );
 };
