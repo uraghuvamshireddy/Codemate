@@ -1,5 +1,9 @@
+import jwt from 'jsonwebtoken';
+
 export const authSuccess = (req, res) => {
-    const { token, user } = req.user;
-    res.redirect(`${process.env.CLIENT_URL}/dashboard?token=${token}&name=${user.name}`);
-  };
-  
+  const user = req.user;
+  const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+
+  const frontendURL = process.env.CLIENT_URL || 'http://localhost:5173';
+  res.redirect(`${frontendURL}/dashboard?token=${token}&name=${encodeURIComponent(user.name)}`);
+};

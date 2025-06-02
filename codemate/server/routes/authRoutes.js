@@ -11,4 +11,5 @@ router.get('/google/callback',
   authSuccess
 );
 
+
 export default router;
