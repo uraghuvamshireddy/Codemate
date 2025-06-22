@@ -171,3 +171,87 @@ body {
   background-color: #52e0c4;
 }
 
+/* stats */
+.stats-container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  padding: 20px;
+}
+
+.stats-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.stat-card {
+  background-color: #112240;
+  color: #fff;
+  padding: 20px 24px;
+  border-radius: 10px;
+  flex: 1;
+  min-width: 320px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  transition: transform 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+}
+
+.stat-card h2 {
+  margin-bottom: 16px;
+  color: #64ffda;
+  font-size: 1.4rem;
+}
+
+.stat-item {
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+
+.lc-difficulty {
+  margin-top: 6px;
+  display: flex;
+  gap: 10px;
+  font-size: 0.95rem;
+}
+
+.lc-difficulty span {
+  font-weight: bold;
+}
+
+.easy { color: #4caf50; }
+.medium { color: #ffc107; }
+.hard { color: #f44336; }
+
+.contest-card {
+  width: 100%;
+}
+
+.contest-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.contest-list li {
+  margin-bottom: 12px;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+  padding-bottom: 6px;
+}
+
+.contest-name {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.contest-time {
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+.no-contest {
+  color: #aaa;
+  font-style: italic;
+}
