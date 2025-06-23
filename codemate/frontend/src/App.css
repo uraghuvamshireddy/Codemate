@@ -172,11 +172,72 @@ body {
 }
 
 /* stats */
+.stats-page {
+  display: flex;
+  flex-direction: row;
+  padding: 30px;
+  background-color: #0a192f;
+  color: #ffffff;
+  min-height: 100vh;
+  box-sizing: border-box;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.profile-side {
+  background-color: #112240;
+  color: #f0f0f0;
+  padding: 24px;
+  margin: 16px;
+  border-radius: 12px;
+  width: 380px; 
+  min-height: 400px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
+  font-family: 'Segoe UI', sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.side-heading {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #555;
+  padding-bottom: 8px;
+  width: 100%;
+}
+
+.profile-side p {
+  font-size: 15px;
+  line-height: 1.7;
+  margin: 6px 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px dashed #444;
+  padding-bottom: 4px;
+}
+
+.profile-side p strong {
+  flex: 1;
+  color: #aadfff;
+}
+
+.profile-side p span {
+  flex: 2;
+  text-align: right;
+  color: #eee;
+  word-break: break-word;
+}
+
+
 .stats-container {
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 30px;
-  padding: 20px;
 }
 
 .stats-row {
@@ -187,27 +248,28 @@ body {
 
 .stat-card {
   background-color: #112240;
-  color: #fff;
-  padding: 20px 24px;
+  padding: 24px;
   border-radius: 10px;
   flex: 1;
-  min-width: 320px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  min-width: 300px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
   transition: transform 0.2s ease;
 }
 
 .stat-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-5px);
 }
 
 .stat-card h2 {
+  font-size: 1.3rem;
   margin-bottom: 16px;
   color: #64ffda;
-  font-size: 1.4rem;
+  border-bottom: 1px dashed rgba(255,255,255,0.1);
+  padding-bottom: 6px;
 }
 
 .stat-item {
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   font-size: 1rem;
 }
 
@@ -233,25 +295,28 @@ body {
 .contest-list {
   list-style: none;
   padding-left: 0;
+  margin-top: 12px;
 }
 
 .contest-list li {
-  margin-bottom: 12px;
-  border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+  margin-bottom: 14px;
   padding-bottom: 6px;
+  border-bottom: 1px dashed rgba(255,255,255,0.1);
 }
 
 .contest-name {
   font-weight: 600;
+  font-size: 1rem;
   color: #ffffff;
 }
 
 .contest-time {
-  font-size: 0.9rem;
-  color: #ccc;
+  font-size: 0.88rem;
+  color: #aaa;
 }
 
 .no-contest {
   color: #aaa;
   font-style: italic;
 }
+
