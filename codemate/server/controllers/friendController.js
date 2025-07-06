@@ -96,3 +96,35 @@ export const getFriendLists = async (req, res) => {
     res.status(500).json({ message: "Couldn't fetch friend data" });
   }
 };
+
+export const searchUser = async(req,res)=>{
+  const {username} = req.params;
+  const currentUserId = req.user.id;
+  if (!username || typeof username !== 'string') {
+  return res.status(400).json({message: "Invalid username"});
+}
+
+  try{
+    const userResult = await pool.query(
+      'SELECT id, username, name FROM users WHERE username = $1',
+      [username]
+    );
+    if(userResult.rowCount===0){
+      return res.status(404).json({message:"User not found"});
+
+    }
+    const targetUser = userResult.rows[0];
+    const friendshipResult = await pool.query(`
+      select * from friendships where(
+      (requester_id = $1 and addressee_id = $2) or
+      (requester_id = $2 and addressee_id = $1)
+      ) and status = 'accepted'
+      `,[currentUserId,targetUser.id]);
+
+      const isFriend = friendshipResult.rowCount>0;
+      return res.status(200).json({user:targetUser,isFriend});
+  }catch(err){
+    console.log(err);
+    return res.status(500).json({message:"Internal Server error"});
+  }
+};
