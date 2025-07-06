@@ -56,6 +56,9 @@ export const updateProfile = async (req, res) => {
     );
     res.json(result.rows[0]);
   } catch (error) {
+    if(error.code === '23505'){
+      return res.status(400).json({message:"This username already exists"});
+    }
     res.status(500).json({ message: 'Error updating profile' });
   }
 };
