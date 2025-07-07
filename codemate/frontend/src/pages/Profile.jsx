@@ -51,7 +51,7 @@ const Profile = () => {
   return (
     <div>
       <Navbar />
-      <div className="profile-wrapper">
+      <div className="user-profile">
 
         <div className="profile-page">
           <h2 className="profile-heading">Your Profile</h2>

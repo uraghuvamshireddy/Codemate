@@ -118,6 +118,15 @@ body {
   background-color: #c93030;
 }
 
+.user-profile{
+  margin-top: 3%;
+  padding: top 100px;;
+   display: flex;
+  justify-content: center;
+  padding: 40px 16px 16px;
+  color: #f0f8ff;
+}
+
 /* PROFILE WRAPPER */
 .profile-wrapper {
   display: flex;
@@ -127,6 +136,7 @@ body {
 }
 
 /* PROFILE CARD */
+
 .profile-page {
   max-width: 600px;
   width: 100%;
