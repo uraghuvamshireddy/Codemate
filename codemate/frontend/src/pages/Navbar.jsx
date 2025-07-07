@@ -9,6 +9,12 @@ const Navbar = () => {
     navigate('/profile');
   };
 
+  const handleLogout = ()=>{
+    localStorage.removeItem("token");
+    localStorage.removeItem("name");
+    navigate('/');
+  }
+
   return (
     <div className="navbar">
       <div className="navbar-left">
@@ -29,7 +35,7 @@ const Navbar = () => {
           <span onClick={handleProfileClick} className="username">{userName || 'User'}</span>
         </div>
 
-        <button className="logout-button">Logout</button>
+        <button className="logout-button" onClick={handleLogout}>Logout</button>
       </div>
     </div>
   );
