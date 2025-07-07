@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
 import Stats from './Stats';
+import UserProfile from './UserProfile';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -32,9 +33,13 @@ const Dashboard = () => {
   }, [navigate]);
 
   return (
-    <div>
+    <div >
       <Navbar />
-      {token && <Stats />}
+      <div className="dashboard-container">
+  {token && <UserProfile />}
+  {token && <Stats />}
+</div>
+
     </div>
   );
 };
