@@ -1,95 +1,154 @@
-import {pool} from "../database/db.js";
+import { pool } from "../database/db.js";
 
-export const sendFriendRequest = async(req,res)=>{
-    const requester = req.user.id
-    const {addresseeId} = req.body;
+export const sendFriendRequest = async (req, res) => {
+  const requesterName = req.user.name;
+  const { toName } = req.body;
+  if (requesterName === toName) {
+    return res.status(400).json({ message: "You can't friend yourself" });
+  }
 
-    if(requester == addresseeId){
-        return res.status(400).json({message:"You can't friend yourself"});
-    }
-    try{
-        await pool.query(
-            `insert into friendships (requester_id,addressee_id,status)
-            values ($1, $2, 'pending) on conflict do nothing`,
-            [requester,addresseeId]
-        );
-        return res.status(200).json({message:"Request send successfully"});
-        
-    }catch(err){
-        res.status(500).json({message:"Error sending request"});
-    }
+  try {
+    await pool.query(
+      `INSERT INTO friendships (requester_id, addressee_id, status)
+       VALUES (
+         (SELECT id FROM users WHERE name = $1),
+         (SELECT id FROM users WHERE name = $2),
+         'pending'
+       )
+       ON CONFLICT DO NOTHING`,
+      [requesterName, toName]
+    );
 
-
+    return res.status(200).json({ message: "Request sent successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error sending request" });
+  }
 };
 
+export const acceptFriendRequest = async (req, res) => {
+  const toName = req.user.name;
+  const { fromName } = req.body;
 
-export const acceptFriendRequest = async (req,res)=>{
-    const userId = req.user.id;
-    const {requesterId} = req.body;
+  try {
+    const result = await pool.query(
+      `UPDATE friendships SET status = 'accepted'
+       WHERE requester_id = (SELECT id FROM users WHERE name = $1)
+       AND addressee_id = (SELECT id FROM users WHERE name = $2)`,
+      [fromName, toName]
+    );
 
-    try{
-        await pool.query(
-            `update friendships set status ='accepted'
-            where requester_id = $1 and addressee_id = $2`,
-            [requesterId,userId]
-        );
-        res.json({message:"Friend Request Accepted"});
-    }catch(err){
-        return res.status(500).json({message:'Error accepting request'});
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: "Friend request not found" });
     }
+
+    res.json({ message: "Friend request accepted" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error accepting request" });
+  }
 };
 
 export const deleteFriendRequest = async (req, res) => {
-  const userId = req.user.id;
-  const { otherUserId } = req.body;
+  const currentName = req.user.name;
+  const { otherName } = req.body;
 
   try {
     await pool.query(
       `DELETE FROM friendships
-       WHERE (requester_id = $1 AND addressee_id = $2)
-          OR (requester_id = $2 AND addressee_id = $1)`,
-      [userId, otherUserId]
+       WHERE (
+         requester_id = (SELECT id FROM users WHERE name = $1)
+         AND addressee_id = (SELECT id FROM users WHERE name = $2)
+       ) OR (
+         requester_id = (SELECT id FROM users WHERE name = $2)
+         AND addressee_id = (SELECT id FROM users WHERE name = $1)
+       )`,
+      [currentName, otherName]
     );
-    res.json({ message: 'Request deleted' });
+
+    res.json({ message: "Request or friendship deleted" });
   } catch (err) {
-    res.status(500).json({ message: 'Error deleting request' });
+    console.error(err);
+    res.status(500).json({ message: "Error deleting request" });
   }
 };
 
+export const unfriend = async (req, res) => {
+  try {
+    const requestId = req.user.id;
+    const { targetName } = req.body;
+
+    if (!requestId || !targetName) {
+      return res.status(400).json({ message: 'Missing requestId or targetName' });
+    }
+
+    const targetRes = await pool.query(
+      'SELECT id FROM users WHERE name = $1',
+      [targetName]
+    );
+
+    if (targetRes.rowCount === 0) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const targetId = targetRes.rows[0].id;
+
+    const deleteRes = await pool.query(
+      `DELETE FROM friendships 
+       WHERE (requester_id = $1 AND addressee_id = $2) 
+          OR (requester_id = $2 AND addressee_id = $1) 
+       RETURNING *`,
+      [requestId, targetId]
+    );
+
+    if (deleteRes.rowCount === 0) {
+      return res.status(404).json({ message: 'Friendship not found' });
+    }
+
+    return res.status(200).json({ message: 'Unfriended successfully' });
+  } catch (err) {
+    console.error('Unfriend error:', err);
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
 
 export const getFriendLists = async (req, res) => {
-  const userId = req.user.id;
+  const name = req.user.name;
 
   try {
     const followers = await pool.query(`
-      SELECT users.id, users.name FROM friendships
-      JOIN users ON users.id = friendships.requester_id
-      WHERE friendships.addressee_id = $1 AND friendships.status = 'accepted'
-    `, [userId]);
+      SELECT u.name FROM friendships
+      JOIN users u ON u.id = friendships.requester_id
+      WHERE friendships.addressee_id = (SELECT id FROM users WHERE name = $1)
+      AND friendships.status = 'accepted'
+    `, [name]);
 
     const following = await pool.query(`
-      SELECT users.id, users.name FROM friendships
-      JOIN users ON users.id = friendships.addressee_id
-      WHERE friendships.requester_id = $1 AND friendships.status = 'accepted'
-    `, [userId]);
+      SELECT u.name FROM friendships
+      JOIN users u ON u.id = friendships.addressee_id
+      WHERE friendships.requester_id = (SELECT id FROM users WHERE name = $1)
+      AND friendships.status = 'accepted'
+    `, [name]);
 
     const pendingReceived = await pool.query(`
-      SELECT users.id, users.name FROM friendships
-      JOIN users ON users.id = friendships.requester_id
-      WHERE friendships.addressee_id = $1 AND friendships.status = 'pending'
-    `, [userId]);
+      SELECT u.name FROM friendships
+      JOIN users u ON u.id = friendships.requester_id
+      WHERE friendships.addressee_id = (SELECT id FROM users WHERE name = $1)
+      AND friendships.status = 'pending'
+    `, [name]);
 
     const pendingSent = await pool.query(`
-      SELECT users.id, users.name FROM friendships
-      JOIN users ON users.id = friendships.addressee_id
-      WHERE friendships.requester_id = $1 AND friendships.status = 'pending'
-    `, [userId]);
+      SELECT u.name FROM friendships
+      JOIN users u ON u.id = friendships.addressee_id
+      WHERE friendships.requester_id = (SELECT id FROM users WHERE name = $1)
+      AND friendships.status = 'pending'
+    `, [name]);
 
     res.json({
       followers: followers.rows,
       following: following.rows,
-      pendingSent: pendingSent.rows,
-      pendingReceived: pendingReceived.rows
+      pendingReceived: pendingReceived.rows,
+      pendingSent: pendingSent.rows
     });
   } catch (err) {
     console.error(err);
@@ -97,34 +156,42 @@ export const getFriendLists = async (req, res) => {
   }
 };
 
-export const searchUser = async(req,res)=>{
-  const {username} = req.params;
-  const currentUserId = req.user.id;
-  if (!username || typeof username !== 'string') {
-  return res.status(400).json({message: "Invalid username"});
-}
+export const searchUser = async (req, res) => {
+  const { name: targetName } = req.params;
+  const currentName = req.user.name;
 
-  try{
+  if (!targetName || typeof targetName !== 'string') {
+    return res.status(400).json({ message: "Invalid name" });
+  }
+
+  try {
     const userResult = await pool.query(
-      'SELECT id, username, name FROM users WHERE username = $1',
-      [username]
+      `SELECT id, name FROM users WHERE name = $1`,
+      [targetName]
     );
-    if(userResult.rowCount===0){
-      return res.status(404).json({message:"User not found"});
 
+    if (userResult.rowCount === 0) {
+      return res.status(404).json({ message: "User not found" });
     }
-    const targetUser = userResult.rows[0];
-    const friendshipResult = await pool.query(`
-      select * from friendships where(
-      (requester_id = $1 and addressee_id = $2) or
-      (requester_id = $2 and addressee_id = $1)
-      ) and status = 'accepted'
-      `,[currentUserId,targetUser.id]);
 
-      const isFriend = friendshipResult.rowCount>0;
-      return res.status(200).json({user:targetUser,isFriend});
-  }catch(err){
-    console.log(err);
-    return res.status(500).json({message:"Internal Server error"});
+    const targetUser = userResult.rows[0];
+
+    const friendshipResult = await pool.query(`
+      SELECT * FROM friendships WHERE (
+        requester_id = (SELECT id FROM users WHERE name = $1)
+        AND addressee_id = (SELECT id FROM users WHERE name = $2)
+      ) OR (
+        requester_id = (SELECT id FROM users WHERE name = $2)
+        AND addressee_id = (SELECT id FROM users WHERE name = $1)
+      )
+      AND status = 'accepted'
+    `, [currentName, targetName]);
+
+    const isFriend = friendshipResult.rowCount > 0;
+
+    return res.status(200).json({ user: targetUser, isFriend });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
