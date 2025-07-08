@@ -163,6 +163,7 @@ export const searchUser = async (req, res) => {
   if (!targetName || typeof targetName !== 'string') {
     return res.status(400).json({ message: "Invalid name" });
   }
+  
 
   try {
     const userResult = await pool.query(
@@ -175,6 +176,9 @@ export const searchUser = async (req, res) => {
     }
 
     const targetUser = userResult.rows[0];
+    if(targetName == currentName){
+     return res.status(200).json({ user: targetUser, isFriend:true });
+    }
 
     const friendshipResult = await pool.query(`
       SELECT * FROM friendships WHERE (

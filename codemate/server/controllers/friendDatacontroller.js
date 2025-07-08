@@ -1,4 +1,5 @@
 import { pool } from "../database/db.js";
+import axios from 'axios'
 
 
 export const getUserbyId = async(req,res)=>{
