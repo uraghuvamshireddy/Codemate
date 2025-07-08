@@ -56,7 +56,7 @@ const handleSearch = async (e) => {
 
         <div className="profile">
           <div onClick={handleProfileClick} className="profile-icon"> {userName ? userName[0] : 'U'}</div>
-          <span onClick={handleProfileClick} className="username">{userName || 'User'}</span>
+          <span onClick={handleProfileClick} className="username"></span>
         </div>
 
         <button className="logout-button" onClick={handleLogout}>Logout</button>
