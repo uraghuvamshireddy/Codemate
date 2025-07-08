@@ -180,15 +180,12 @@ export const searchUser = async (req, res) => {
       SELECT * FROM friendships WHERE (
         requester_id = (SELECT id FROM users WHERE name = $1)
         AND addressee_id = (SELECT id FROM users WHERE name = $2)
-      ) OR (
-        requester_id = (SELECT id FROM users WHERE name = $2)
-        AND addressee_id = (SELECT id FROM users WHERE name = $1)
-      )
+    )
       AND status = 'accepted'
     `, [currentName, targetName]);
-
+     
     const isFriend = friendshipResult.rowCount > 0;
-
+    
     return res.status(200).json({ user: targetUser, isFriend });
   } catch (err) {
     console.error(err);

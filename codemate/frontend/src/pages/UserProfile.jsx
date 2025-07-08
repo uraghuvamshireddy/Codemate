@@ -11,8 +11,7 @@ const UserProfile = () => {
   const [followRequests, setFollowRequests] = useState([]);
   const [following, setFollowing] = useState([]);
   const [sentRequests, setSentRequests] = useState([]);
-  const [openPanel, setOpenPanel] = useState(null); // 'followers' | 'following' | null
-
+  const [openPanel, setOpenPanel] = useState(null);
   useEffect(() => {
     fetchFollowData();
   }, []);

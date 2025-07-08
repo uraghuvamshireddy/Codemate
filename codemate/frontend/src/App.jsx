@@ -4,6 +4,10 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
+import NotFoundPage from './pages/NotFoundPage';
+import OtherUserProfile from './pages/OtherUserProfile';
+import FriendDashboard from './pages/FriendDashboard';
+
 
 function App() {
   return (
@@ -12,6 +16,9 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/profile" element={<Profile />} />
+       <Route path="/not-found" element={<NotFoundPage />} />
+       <Route path="/user/:id" element={<OtherUserProfile />} />
+        <Route path="/friend/:id" element={<FriendDashboard />} />       
       </Routes>
     </BrowserRouter>
   );

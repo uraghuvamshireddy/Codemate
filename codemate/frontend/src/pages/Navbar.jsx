@@ -1,9 +1,30 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import axios from 'axios';
 
 const Navbar = () => {
     const navigate = useNavigate();
+    const token = localStorage.getItem('token');
     const userName = localStorage.getItem('name')
+    const [query, setQuery] = useState('');
+    const backend_URL = import.meta.env.VITE_BACKEND_URL;
+
+const handleSearch = async (e) => {
+    if (e.key === 'Enter' && query.trim()) {
+    try {
+      const { data: u } = await axios.get(`${backend_URL}/friends/search/${query}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (u.isFriend) navigate(`/friend/${u.user.id}`);
+      else navigate(`/user/${u.user.id}`);
+    } catch (err) {
+      navigate('/not-found');
+    }
+  }
+};
+
+
     const handleProfileClick = () => {
       console.log('profile')
     navigate('/profile');
@@ -23,6 +44,9 @@ const Navbar = () => {
           type="text"
           placeholder="Search..."
           className="search-bar"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onKeyDown={handleSearch}
         />
       </div>
 
