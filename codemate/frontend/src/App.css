@@ -214,6 +214,15 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+   max-height: 80vh;      
+  overflow-y: auto;
+}
+
+.profile-bg {
+  background-image: radial-gradient(rgba(56,189,248,0.1) 1px, transparent 1px);
+  background-size: 8px 8px;
+  padding: 16px;
+  border-radius: 8px;
 }
 
 .side-heading {
@@ -315,6 +324,9 @@ body {
 .contest-list li {
   padding: 12px;
   border-bottom: 1px solid #334155;
+}
+.contest-card {
+  width: 100%;
 }
 
 .contest-name {
@@ -559,6 +571,40 @@ body {
 .compare-table tr:hover {
   background-color: #334155;
 }
+
+/* Heatmap styles */
+.heatmaps-wrapper {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.heatmap-grid {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(24px, 1fr));
+  gap: 4px;
+  margin-top: 12px;
+  max-width: 240px;
+}
+
+.heatmap-cell {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 2px;
+  transition: transform 0.1s;
+}
+
+.heatmap-cell:hover {
+  transform: scale(1.2);
+  z-index: 1;
+}
+
+.heatmap-cell.empty {
+  background: transparent;
+  pointer-events: none;
+}
+
 
 
 /* MOBILE & TABLET MEDIA QUERIES */
