@@ -62,3 +62,16 @@ export const updateProfile = async (req, res) => {
     res.status(500).json({ message: 'Error updating profile' });
   }
 };
+
+export const getMe = async (req,res)=>{
+  const userId = req.user.id;
+  try{
+   const result = await pool.query(
+       'select id,name from users where id = $1',[userId] 
+    )
+    return res.json(result.rows[0]);
+  }
+  catch(err){
+    res.status(500).json({ message: 'Error' });
+  }
+}

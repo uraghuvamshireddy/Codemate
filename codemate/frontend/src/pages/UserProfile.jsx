@@ -7,14 +7,27 @@ const UserProfile = () => {
   const name = localStorage.getItem('name');
   const token = localStorage.getItem('token');
 
+  const [user, setUser] = useState({ name: '', id: '' });
   const [followers, setFollowers] = useState([]);
   const [followRequests, setFollowRequests] = useState([]);
   const [following, setFollowing] = useState([]);
   const [sentRequests, setSentRequests] = useState([]);
   const [openPanel, setOpenPanel] = useState(null);
   useEffect(() => {
+    fetchUser();
     fetchFollowData();
   }, []);
+
+  const fetchUser = async () => {
+    try {
+      const res = await axios.get(`${backend_URL}/profile/me`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setUser({ name: res.data.name, id: res.data.id });
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const fetchFollowData = async () => {
     try {
@@ -101,7 +114,7 @@ const unfriend = async (targetName) => {
     <div className="profile-wrapper">
       <div className="profile-page">
         <div className="profile-summary">
-          <h2 className="profile-heading">{name}</h2>
+          <h2 className="profile-heading">{user.name}</h2>
           <div className="follow-stats">
             <button className={`tab-button ${openPanel === 'followers' ? 'tab-active' : ''}`} onClick={() => togglePanel('followers')}>
               Followers ({followers.length})
