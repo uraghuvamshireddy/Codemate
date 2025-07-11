@@ -77,7 +77,7 @@ const handleSearch = async (e) => {
 )}
 
         <button className="nav-button">Solutions</button>
-        <button className="nav-button">Compare</button>
+        <button className="nav-button" onClick={() => navigate('/compare')}>Compare</button>
 
         <div className="profile">
           <div onClick={handleProfileClick} className="profile-icon"> {userName ? userName[0] : 'U'}</div>

@@ -7,6 +7,7 @@ import Profile from './pages/Profile';
 import NotFoundPage from './pages/NotFoundPage';
 import OtherUserProfile from './pages/OtherUserProfile';
 import FriendDashboard from './pages/FriendDashboard';
+import Compare from './pages/Compare';
 
 
 function App() {
@@ -18,7 +19,8 @@ function App() {
         <Route path="/profile" element={<Profile />} />
        <Route path="/not-found" element={<NotFoundPage />} />
        <Route path="/user/:id" element={<OtherUserProfile />} />
-        <Route path="/friend/:id" element={<FriendDashboard />} />       
+        <Route path="/friend/:id" element={<FriendDashboard />} />  
+        <Route path='/compare' element={<Compare />} />     
       </Routes>
     </BrowserRouter>
   );
