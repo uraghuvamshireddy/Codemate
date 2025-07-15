@@ -1,30 +1,45 @@
 import axios from 'axios';
 
-export const getSolutionVideos = async(req,res) =>{
-    const API_KEY= process.env.YT_API_KEY;
-    const searches = [
-        'Codeforces contest solutions',
-        'Leetcode contest solutions',
-        'Leetcode Daily Challenge'
-    ];
+export const getSolutionVideos = async (req, res) => {
+  const API_KEY = process.env.YT_API_KEY;
 
-    try{
-        const allVideos = [];
-        for(const q of searches){
-            const yt = await axios.get('https://www.googleapis.com/youtube/v3/search',{
-                params:{ q, key: API_KEY, part: 'snippet', maxResults: 8, order: 'date', type: 'video'}
-            });
-            allVideos.push(...yt.data.items.map(i=>({
-                id: i.id.videoId,
-                title: i.snippet.title,
-                url: `https://www.youtube.com/watch?v=${i.id.videoId}`,
-                publishedAt: i.snippet.publishedAt
-            })));
+  const searches = [
+    { query: 'Codeforces contest solutions', platform: 'codeforces' },
+    { query: 'Leetcode contest solutions', platform: 'leetcode' },
+    { query: 'Leetcode Daily Challenge', platform: 'leetcode' }
+  ];
+
+  try {
+    const allVideos = [];
+
+    for (const { query, platform } of searches) {
+      const ytRes = await axios.get('https://www.googleapis.com/youtube/v3/search', {
+        params: {
+          q: query,
+          key: API_KEY,
+          part: 'snippet',
+          maxResults: 8,
+          order: 'date',
+          type: 'video'
         }
-        allVideos.sort((a,b)=> new Date(b.publishedAt) - new Date(a.publishedAt));
-        res.json(allVideos)
-    }catch(err){
-        console.log(err);
-        res.status(500).json({error:'YT fetch failed'});
+      });
+
+      const mapped = ytRes.data.items.map(item => ({
+        id: item.id.videoId,
+        title: item.snippet.title,
+        thumbnail: item.snippet.thumbnails.high.url,
+        platform,
+        publishedAt: item.snippet.publishedAt
+      }));
+
+      allVideos.push(...mapped);
     }
+
+    allVideos.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
+
+    res.json({ videos: allVideos });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to fetch YouTube videos' });
+  }
 };
