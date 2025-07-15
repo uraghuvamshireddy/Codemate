@@ -76,7 +76,7 @@ const handleSearch = async (e) => {
   </div>
 )}
 
-        <button className="nav-button">Solutions</button>
+        <button className="nav-button" onClick={() => navigate('/solutions')}>Solutions</button>
         <button className="nav-button" onClick={() => navigate('/compare')}>Compare</button>
 
         <div className="profile">
