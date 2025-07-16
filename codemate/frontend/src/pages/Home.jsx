@@ -72,7 +72,7 @@ const Home = () => {
 
       <footer className="site-footer">
         <div className="footer-links">
-          <a href="mailto:youremail@example.com">youremail@example.com</a>
+          <a href="mailto:uraghuvamshireddy@gmail.com">uraghuvamshireddy@gmail.com</a>
         </div>
         <div className="footer-logo-wrapper">
           <img
