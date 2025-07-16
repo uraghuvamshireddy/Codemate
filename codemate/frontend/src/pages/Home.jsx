@@ -37,11 +37,11 @@ const Home = () => {
             <h3>Friend Dashboard</h3>
             <p>Compare performance and challenge your peers.</p>
           </div>
-          <div className="feature-card">
+          {/* <div className="feature-card">
             <div className="icon">📅</div>
             <h3>Contest Alerts</h3>
             <p>Never miss an upcoming contest—stay notified.</p>
-          </div>
+          </div> */}
           <div className="feature-card">
             <div className="icon">🔥</div>
             <h3>Heatmaps</h3>
