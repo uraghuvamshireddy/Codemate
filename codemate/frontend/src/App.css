@@ -921,6 +921,31 @@ body {
   to   { transform: translateY(-20px) scale(1.05); }
 }
 
+/* not found */
+
+.not-found-wrapper {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #121212;
+  color: #ffffff;
+  text-align: center;
+  padding: 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.not-found-title {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: #ff6b6b;
+}
+
+.not-found-message {
+  font-size: 1.25rem;
+  color: #cccccc;
+}
 
 
 /* MOBILE & TABLET MEDIA QUERIES */
