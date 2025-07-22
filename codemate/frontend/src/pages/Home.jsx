@@ -2,8 +2,8 @@ import React from 'react';
 
 const Home = () => {
   const handleLogin = () => {
-    window.location.href = 'http://localhost:5000/auth/google';
-  };
+    window.location.href = import.meta.env.VITE_GOOGLE_AUTH_URL;
+  }
 
   return (
     <>
