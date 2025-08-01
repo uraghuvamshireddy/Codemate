@@ -171,7 +171,7 @@ export const searchUser = async (req, res) => {
       `SELECT * FROM friendships
        WHERE status = 'accepted' AND (
          (requester_id = $1 AND addressee_id = $2)
-         OR (requester_id = $2 AND addressee_id = $1)
+         
        )`,
       [currentId, targetUser.id]
     );
