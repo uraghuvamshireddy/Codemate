@@ -1,15 +1,25 @@
 import { pool } from "../database/db.js";
+import redisClient from "../redis/redisClient.js";
 
 export const getUserProfile = async (req, res) => {
   const userId = req.user.id;
   try {
+      
+    const cachedprofile = await redisClient.get(`userProfile:${userId}`);
+    if(cachedprofile){
+      return res.json(JSON.parse(cachedprofile));
+    }
+
     const result = await pool.query(
       `SELECT name, codeforces_link, leetcode_link, college_name, github_id, year_of_study, branch, degree
        FROM users
        WHERE id = $1`,
       [userId]
     );
-    res.json(result.rows[0]);
+    const profile=(result.rows[0]);
+    await redisClient.set(`userProfile:${userId}`,JSON.stringify(profile));
+    res.json(profile);
+
   } catch (error) {
     res.status(500).json({ message: "Error fetching profile" });
   }
@@ -54,6 +64,7 @@ export const updateProfile = async (req, res) => {
         userId
       ]
     );
+    await redisClient.del(`userProfile:${userId}`);
     res.json(result.rows[0]);
   } catch (error) {
     if(error.code === '23505'){

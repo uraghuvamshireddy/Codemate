@@ -1,9 +1,16 @@
 import axios from 'axios'
 import { pool } from '../database/db.js'
+import redisClient from '../redis/redisClient.js';
 
 export const getUserCodingData = async (req,res)=>{
     const userId = req.user.id;
     try{
+
+      const cachedProfile = await redisClient.get(`codingProfile:${userId}`);
+      if (cachedProfile) {
+      return res.json(JSON.parse(cachedProfile));
+    }
+
         const result = await pool.query(
             'SELECT codeforces_link, leetcode_link FROM users WHERE id = $1', [userId]
         );
@@ -60,7 +67,7 @@ export const getUserCodingData = async (req,res)=>{
     const cfHeat = Object.entries(cfbyDay).map(([date,count])=>({date,count}));
     const lcHeat = Object.entries(lcbyDay).map(([date,count])=>({date,count}));
 
-    return res.json({
+    const profileData = ({
       codeforces: {
         rating: cfUser.data.result[0].rating || 'Unrated',
         solvedCount: solvedSet.size,
@@ -76,7 +83,8 @@ export const getUserCodingData = async (req,res)=>{
         heatmap: lcHeat
       }
     });
-
+    await redisClient.setEx(`codingProfile:${userId}`,3600,JSON.stringify(profileData));
+    return res.json(profileData);
 
     } catch (error) {
     console.error(error);
