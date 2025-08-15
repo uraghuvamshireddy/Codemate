@@ -65,13 +65,13 @@ const Profile = () => {
               />
               <input
                 className="profile-input"
-                placeholder="Codeforces Link"
+                placeholder="Codeforces Id"
                 value={profile.codeforces_link || ''}
                 onChange={(e) => setProfile({ ...profile, codeforces_link: e.target.value })}
               />
               <input
                 className="profile-input"
-                placeholder="LeetCode Link"
+                placeholder="LeetCode Id"
                 value={profile.leetcode_link || ''}
                 onChange={(e) => setProfile({ ...profile, leetcode_link: e.target.value })}
               />
