@@ -52,7 +52,7 @@ const handleSearch = async (e) => {
     <div className="navbar">
       
       <div className="navbar-left">
-        <div className="company-name">CODEMATE</div>
+        <div className="company-name" onClick={()=>navigate('/dashboard')}>CODEMATE</div>
         <input
           type="text"
           placeholder="Search..."

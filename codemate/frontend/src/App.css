@@ -31,6 +31,7 @@ body {
   font-weight: bold;
   color: #38bdf8;
   letter-spacing: 1px;
+  cursor: pointer;
 }
 
 .search-bar {
