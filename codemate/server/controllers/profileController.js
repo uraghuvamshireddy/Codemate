@@ -65,6 +65,7 @@ export const updateProfile = async (req, res) => {
       ]
     );
     await redisClient.del(`userProfile:${userId}`);
+    await redisClient.del(`codingProfile:${userId}`);
     res.json(result.rows[0]);
   } catch (error) {
     if(error.code === '23505'){
